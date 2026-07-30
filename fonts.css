@@ -1,13 +1,13 @@
 @font-face {
-   font-family: "Noticia Text";
-   src: url("fonts/Noticia Text Bold.woff2") format("woff2");
-   font-weight: bold;
-   font-style: normal;
+   font-family: "Bodoni MT Black";
+   src: url("fonts/Bodoni MT Black Italic.woff2") format("woff2");
+   font-weight: normal;
+   font-style: italic;
 }
 @font-face {
    font-family: "Noticia Text";
-   src: url("fonts/Noticia Text.woff2") format("woff2");
-   font-weight: normal;
+   src: url("fonts/Noticia Text Bold.woff2") format("woff2");
+   font-weight: bold;
    font-style: normal;
 }
 @font-face {
@@ -17,8 +17,8 @@
    font-style: italic;
 }
 @font-face {
-   font-family: "Open Sans";
-   src: url("fonts/Open Sans Regular.woff2") format("woff2");
+   font-family: "Noticia Text";
+   src: url("fonts/Noticia Text.woff2") format("woff2");
    font-weight: normal;
    font-style: normal;
 }
@@ -35,14 +35,20 @@
    font-style: normal;
 }
 @font-face {
-   font-family: "Open Sans Light";
-   src: url("fonts/Open Sans Light Italic.woff2") format("woff2");
+   font-family: "Open Sans";
+   src: url("fonts/Open Sans Regular.woff2") format("woff2");
    font-weight: normal;
-   font-style: italic;
+   font-style: normal;
 }
 @font-face {
    font-family: "Open Sans Light";
    src: url("fonts/Open Sans Light.woff2") format("woff2");
    font-weight: normal;
    font-style: normal;
+}
+@font-face {
+   font-family: "Open Sans Light";
+   src: url("fonts/Open Sans Light Italic.woff2") format("woff2");
+   font-weight: normal;
+   font-style: italic;
 }
