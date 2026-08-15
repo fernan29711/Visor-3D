@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { apiClient } from '../services/api'
 import { Helmet } from 'react-helmet-async'
-import { Plus, Search, Eye, Trash2 } from 'lucide-react'
+import { Plus, Search, Eye, Trash2, Download } from 'lucide-react'
 
 interface Quote {
   id: string
@@ -39,6 +39,24 @@ export default function Quotes() {
       expired: 'bg-orange-100 text-orange-800',
     }
     return colors[status] || 'bg-gray-100 text-gray-800'
+  }
+
+  const handleDownloadPDF = async (quoteId: string, quoteCode: string) => {
+    try {
+      const response = await apiClient.client.get(`/quotes/${quoteId}/pdf`, {
+        responseType: 'blob'
+      })
+      const url = window.URL.createObjectURL(response.data)
+      const link = document.createElement('a')
+      link.href = url
+      link.setAttribute('download', `cotizacion_${quoteCode}.pdf`)
+      document.body.appendChild(link)
+      link.click()
+      link.parentNode?.removeChild(link)
+      window.URL.revokeObjectURL(url)
+    } catch (error) {
+      console.error('Error descargando PDF:', error)
+    }
   }
 
   return (
@@ -123,6 +141,13 @@ export default function Quotes() {
                     <td className="px-6 py-4 text-sm flex gap-2">
                       <button className="text-blue-600 hover:text-blue-800">
                         <Eye size={16} />
+                      </button>
+                      <button
+                        onClick={() => handleDownloadPDF(quote.id, quote.code)}
+                        className="text-green-600 hover:text-green-800"
+                        title="Descargar PDF"
+                      >
+                        <Download size={16} />
                       </button>
                       <button className="text-red-600 hover:text-red-800">
                         <Trash2 size={16} />

@@ -1,6 +1,7 @@
 """Invoice endpoints."""
 
 from fastapi import APIRouter, Depends, status, Query
+from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
 
 from app.db.database import get_db
@@ -14,6 +15,7 @@ from app.schemas.invoices import (
     InvoiceDetailResponse,
 )
 from app.services.invoice_service import InvoiceService
+from app.services.pdf_service import PDFService
 from app.core.exceptions import http_exception, AppException
 
 router = APIRouter(prefix="/invoices", tags=["Invoices"])
@@ -129,6 +131,26 @@ async def delete_invoice(
         service = InvoiceService(db)
         service.delete(invoice_id, str(current_user.organization_id))
         return None
+    except AppException as e:
+        raise http_exception(e)
+
+@router.get("/{invoice_id}/pdf")
+async def download_invoice_pdf(
+    invoice_id: str,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """Download invoice as PDF."""
+    try:
+        service = InvoiceService(db)
+        invoice_data = service.get_invoice_with_details(invoice_id, str(current_user.organization_id))
+        pdf_buffer = PDFService.generate_invoice_pdf(invoice_data)
+        ncf = invoice_data.get('ncf', invoice_id)
+        return FileResponse(
+            pdf_buffer,
+            media_type="application/pdf",
+            filename=f"factura_{ncf}.pdf"
+        )
     except AppException as e:
         raise http_exception(e)
 

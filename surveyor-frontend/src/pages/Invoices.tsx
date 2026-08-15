@@ -39,6 +39,24 @@ export default function Invoices() {
     return colors[status] || 'bg-gray-100 text-gray-800'
   }
 
+  const handleDownloadPDF = async (invoiceId: string, ncf: string) => {
+    try {
+      const response = await apiClient.client.get(`/invoices/${invoiceId}/pdf`, {
+        responseType: 'blob'
+      })
+      const url = window.URL.createObjectURL(response.data)
+      const link = document.createElement('a')
+      link.href = url
+      link.setAttribute('download', `factura_${ncf || invoiceId}.pdf`)
+      document.body.appendChild(link)
+      link.click()
+      link.parentNode?.removeChild(link)
+      window.URL.revokeObjectURL(url)
+    } catch (error) {
+      console.error('Error descargando PDF:', error)
+    }
+  }
+
   return (
     <>
       <Helmet>
@@ -122,7 +140,11 @@ export default function Invoices() {
                       <button className="text-blue-600 hover:text-blue-800">
                         <Eye size={16} />
                       </button>
-                      <button className="text-green-600 hover:text-green-800">
+                      <button
+                        onClick={() => handleDownloadPDF(invoice.id, invoice.ncf)}
+                        className="text-green-600 hover:text-green-800"
+                        title="Descargar PDF"
+                      >
                         <Download size={16} />
                       </button>
                       <button className="text-red-600 hover:text-red-800">

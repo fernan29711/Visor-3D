@@ -1,6 +1,7 @@
 """Quote endpoints."""
 
 from fastapi import APIRouter, Depends, status, Query
+from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
 
 from app.db.database import get_db
@@ -15,6 +16,7 @@ from app.schemas.quotes import (
     QuoteStatusUpdate,
 )
 from app.services.quote_service import QuoteService
+from app.services.pdf_service import PDFService
 from app.core.exceptions import http_exception, AppException
 
 router = APIRouter(prefix="/quotes", tags=["Quotes"])
@@ -136,6 +138,25 @@ async def delete_quote(
         service = QuoteService(db)
         service.delete(quote_id, str(current_user.organization_id))
         return None
+    except AppException as e:
+        raise http_exception(e)
+
+@router.get("/{quote_id}/pdf")
+async def download_quote_pdf(
+    quote_id: str,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """Download quote as PDF."""
+    try:
+        service = QuoteService(db)
+        quote_data = service.get_quote_with_details(quote_id, str(current_user.organization_id))
+        pdf_buffer = PDFService.generate_quote_pdf(quote_data)
+        return FileResponse(
+            pdf_buffer,
+            media_type="application/pdf",
+            filename=f"cotizacion_{quote_data.get('code', quote_id)}.pdf"
+        )
     except AppException as e:
         raise http_exception(e)
 
