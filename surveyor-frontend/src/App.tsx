@@ -16,6 +16,8 @@ import ClientDashboard from './pages/client/ClientDashboard'
 import ClientQuotes from './pages/client/ClientQuotes'
 import ClientInvoices from './pages/client/ClientInvoices'
 import ClientProjects from './pages/client/ClientProjects'
+import ProjectMap from './pages/ProjectMap'
+import ClientProjectMap from './pages/client/ClientProjectMap'
 
 const queryClient = new QueryClient()
 
@@ -32,6 +34,7 @@ function App() {
               <Route path="financial" element={<FinancialDashboard />} />
               <Route path="projects" element={<Projects />} />
               <Route path="projects/:projectId" element={<ProjectDetail />} />
+              <Route path="projects/:projectId/map" element={<ProjectMap />} />
               <Route path="quotes" element={<Quotes />} />
               <Route path="invoices" element={<Invoices />} />
               <Route path="reports" element={<Reports />} />
@@ -46,6 +49,7 @@ function App() {
               <Route path="quotes" element={<ClientQuotes />} />
               <Route path="invoices" element={<ClientInvoices />} />
               <Route path="projects" element={<ClientProjects />} />
+              <Route path="projects/:projectId/map" element={<ClientProjectMap />} />
             </Route>
 
             <Route path="*" element={<Navigate to="/" replace />} />

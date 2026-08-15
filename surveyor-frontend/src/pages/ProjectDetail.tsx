@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query'
 import { apiClient } from '../services/api'
 import { Helmet } from 'react-helmet-async'
 import CSVImportExport from '../components/survey/CSVImportExport'
-import { ArrowLeft, MapPin } from 'lucide-react'
+import { ArrowLeft, MapPin, Map } from 'lucide-react'
 
 interface Project {
   id: string
@@ -149,6 +149,17 @@ export default function ProjectDetail() {
             >
               Importar/Exportar
             </button>
+            <button
+              onClick={() => setActiveTab('map')}
+              className={`px-4 py-3 font-medium border-b-2 transition flex items-center gap-2 ${
+                activeTab === 'map'
+                  ? 'border-primary-600 text-primary-600'
+                  : 'border-transparent text-gray-600 hover:text-gray-900'
+              }`}
+            >
+              <Map size={18} />
+              Mapa
+            </button>
           </div>
         </div>
 
@@ -228,6 +239,24 @@ export default function ProjectDetail() {
                 projectId={projectId!}
                 onImportSuccess={() => refetchPoints()}
               />
+            </div>
+          )}
+
+          {activeTab === 'map' && (
+            <div className="bg-white rounded-lg shadow p-6">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-semibold text-gray-900">Visualización Geoespacial</h3>
+                <button
+                  onClick={() => navigate(`/projects/${projectId}/map`)}
+                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-medium flex items-center gap-2"
+                >
+                  <Map size={18} />
+                  Ver Mapa Completo
+                </button>
+              </div>
+              <p className="text-gray-600">
+                Haz clic en el botón de arriba para ver la visualización interactiva con puntos topográficos, cobertura de drones y parcelas.
+              </p>
             </div>
           )}
         </div>

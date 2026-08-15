@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { Helmet } from 'react-helmet-async'
-import { MapPin, Calendar, TrendingUp } from 'lucide-react'
+import { MapPin, Calendar, TrendingUp, Map } from 'lucide-react'
 import { apiClient } from '../../services/api'
 
 interface Project {
@@ -147,6 +147,16 @@ export default function ClientProjects() {
                     <button className="flex-1 flex items-center justify-center gap-2 py-2 px-4 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition font-medium text-sm">
                       <TrendingUp size={16} />
                       Ver Detalles
+                    </button>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        window.location.href = `/client/projects/${project.id}/map`
+                      }}
+                      className="flex items-center justify-center gap-2 py-2 px-4 bg-green-50 text-green-600 rounded-lg hover:bg-green-100 transition font-medium text-sm"
+                      title="Ver en Mapa"
+                    >
+                      <Map size={16} />
                     </button>
                   </div>
                 </div>
