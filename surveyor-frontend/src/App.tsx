@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { HelmetProvider } from 'react-helmet-async'
 import Layout from './components/common/Layout'
+import ClientLayout from './components/client/ClientLayout'
 import Dashboard from './pages/Dashboard'
 import FinancialDashboard from './pages/FinancialDashboard'
 import Projects from './pages/Projects'
@@ -11,6 +12,10 @@ import Invoices from './pages/Invoices'
 import Reports from './pages/Reports'
 import Drones from './pages/Drones'
 import Notifications from './pages/Notifications'
+import ClientDashboard from './pages/client/ClientDashboard'
+import ClientQuotes from './pages/client/ClientQuotes'
+import ClientInvoices from './pages/client/ClientInvoices'
+import ClientProjects from './pages/client/ClientProjects'
 
 const queryClient = new QueryClient()
 
@@ -20,6 +25,7 @@ function App() {
       <QueryClientProvider client={queryClient}>
         <Router>
           <Routes>
+            {/* Admin/Professional Portal */}
             <Route path="/" element={<Layout />}>
               <Route index element={<Dashboard />} />
               <Route path="dashboard" element={<Dashboard />} />
@@ -32,6 +38,16 @@ function App() {
               <Route path="drones" element={<Drones />} />
               <Route path="notifications" element={<Notifications />} />
             </Route>
+
+            {/* Client Portal */}
+            <Route path="/client" element={<ClientLayout />}>
+              <Route index element={<ClientDashboard />} />
+              <Route path="dashboard" element={<ClientDashboard />} />
+              <Route path="quotes" element={<ClientQuotes />} />
+              <Route path="invoices" element={<ClientInvoices />} />
+              <Route path="projects" element={<ClientProjects />} />
+            </Route>
+
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </Router>

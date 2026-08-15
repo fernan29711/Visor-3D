@@ -14,6 +14,7 @@ from app.api.v1.financial.routes import router as financial_router
 from app.api.v1.reports.routes import router as reports_router
 from app.api.v1.drones.routes import router as drones_router
 from app.api.v1.notifications.routes import router as notifications_router
+from app.api.v1.client_portal.routes import router as client_portal_router
 
 api_router = APIRouter()
 
@@ -31,6 +32,7 @@ api_router.include_router(financial_router)
 api_router.include_router(reports_router)
 api_router.include_router(drones_router)
 api_router.include_router(notifications_router)
+api_router.include_router(client_portal_router)
 
 @api_router.get("/status", tags=["Status"])
 async def api_status():
