@@ -225,6 +225,43 @@ class ApiClient {
   getQuotesSummary() {
     return this.client.get('/quotes/summary')
   }
+
+  // Invoice endpoints
+  getInvoices(params?: any) {
+    return this.client.get('/invoices', { params })
+  }
+
+  getInvoice(id: string) {
+    return this.client.get(`/invoices/${id}`)
+  }
+
+  createInvoice(data: any) {
+    return this.client.post('/invoices', data)
+  }
+
+  updateInvoice(id: string, data: any) {
+    return this.client.patch(`/invoices/${id}`, data)
+  }
+
+  deleteInvoice(id: string) {
+    return this.client.delete(`/invoices/${id}`)
+  }
+
+  changeInvoiceStatus(id: string, status: string) {
+    return this.client.post(`/invoices/${id}/status/${status}`)
+  }
+
+  getInvoicesForClient(clientId: string) {
+    return this.client.get(`/invoices/client/${clientId}`)
+  }
+
+  getInvoicesForProject(projectId: string) {
+    return this.client.get(`/invoices/project/${projectId}`)
+  }
+
+  getInvoicesSummary() {
+    return this.client.get('/invoices/summary')
+  }
 }
 
 export const apiClient = new ApiClient()

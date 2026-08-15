@@ -9,6 +9,7 @@ from app.api.v1.projects.routes import router as projects_router
 from app.api.v1.survey_points.routes import router as survey_points_router
 from app.api.v1.calculations.routes import router as calculations_router
 from app.api.v1.quotes.routes import router as quotes_router
+from app.api.v1.invoices.routes import router as invoices_router
 
 api_router = APIRouter()
 
@@ -21,6 +22,7 @@ api_router.include_router(projects_router)
 api_router.include_router(survey_points_router)
 api_router.include_router(calculations_router)
 api_router.include_router(quotes_router)
+api_router.include_router(invoices_router)
 
 @api_router.get("/status", tags=["Status"])
 async def api_status():
