@@ -1,0 +1,101 @@
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+pytest_cache/
+.coverage
+htmlcov/
+.pytest_cache/
+.tox/
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# FastAPI
+*.db
+test.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Node
+surveyor-frontend/node_modules/
+surveyor-frontend/dist/
+
+# Logs
+*.log
+logs/
+
+# Storage
+storage/
+*.sqlite
+*.sqlite3
+
+# Celery
+celerybeat-schedule
+
+# Docker
+.dockerignore
+docker-compose.override.yml
+
+# SSL/Certificates
+ssl/
+*.pem
+*.key
+*.crt
+*.csr
+
+# Secrets
+.secrets
+secrets/
+
+# OS
+Thumbs.db
+
+# Build artifacts
+*.bundle.js
+*.css.map
+
+# IDE specific
+.vscode/extensions.json
+.vscode/launch.json
+.vscode/settings.json
+
+# Temporary
+tmp/
+temp/
+*.tmp

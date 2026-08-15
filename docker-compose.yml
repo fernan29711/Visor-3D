@@ -1,0 +1,96 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgis/postgis:16-3.3
+    container_name: surveyor-postgres
+    environment:
+      POSTGRES_DB: surveyor_db
+      POSTGRES_USER: surveyor
+      POSTGRES_PASSWORD: surveyor123
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U surveyor"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - surveyor-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: surveyor-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - surveyor-network
+
+  backend:
+    build:
+      context: ./surveyor-backend
+      dockerfile: Dockerfile
+    container_name: surveyor-backend
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    environment:
+      DATABASE_URL: postgresql://surveyor:surveyor123@postgres:5432/surveyor_db
+      REDIS_URL: redis://redis:6379
+      DEBUG: "True"
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./surveyor-backend:/app
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - surveyor-network
+
+  celery:
+    build:
+      context: ./surveyor-backend
+      dockerfile: Dockerfile
+    container_name: surveyor-celery
+    command: celery -A app.tasks worker --loglevel=info
+    environment:
+      DATABASE_URL: postgresql://surveyor:surveyor123@postgres:5432/surveyor_db
+      CELERY_BROKER_URL: redis://redis:6379
+      CELERY_RESULT_BACKEND: redis://redis:6379
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - surveyor-network
+
+  frontend:
+    build:
+      context: ./surveyor-frontend
+      dockerfile: Dockerfile
+    container_name: surveyor-frontend
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./surveyor-frontend:/app
+    environment:
+      VITE_API_URL: http://localhost:8000
+    networks:
+      - surveyor-network
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  surveyor-network:
+    driver: bridge
