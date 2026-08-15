@@ -70,3 +70,32 @@ celerybeat-schedule
 
 # Docker
 .dockerignore
+docker-compose.override.yml
+
+# SSL/Certificates
+ssl/
+*.pem
+*.key
+*.crt
+*.csr
+
+# Secrets
+.secrets
+secrets/
+
+# OS
+Thumbs.db
+
+# Build artifacts
+*.bundle.js
+*.css.map
+
+# IDE specific
+.vscode/extensions.json
+.vscode/launch.json
+.vscode/settings.json
+
+# Temporary
+tmp/
+temp/
+*.tmp
