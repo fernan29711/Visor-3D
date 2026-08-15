@@ -11,6 +11,7 @@ from app.api.v1.calculations.routes import router as calculations_router
 from app.api.v1.quotes.routes import router as quotes_router
 from app.api.v1.invoices.routes import router as invoices_router
 from app.api.v1.financial.routes import router as financial_router
+from app.api.v1.reports.routes import router as reports_router
 
 api_router = APIRouter()
 
@@ -25,6 +26,7 @@ api_router.include_router(calculations_router)
 api_router.include_router(quotes_router)
 api_router.include_router(invoices_router)
 api_router.include_router(financial_router)
+api_router.include_router(reports_router)
 
 @api_router.get("/status", tags=["Status"])
 async def api_status():
