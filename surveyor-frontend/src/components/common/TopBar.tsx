@@ -1,4 +1,5 @@
-import { Bell, User, LogOut } from 'lucide-react'
+import { User, LogOut } from 'lucide-react'
+import NotificationCenter from './NotificationCenter'
 
 export default function TopBar() {
   return (
@@ -6,10 +7,7 @@ export default function TopBar() {
       <h2 className="text-lg font-semibold text-gray-800">Dashboard</h2>
 
       <div className="flex items-center gap-6">
-        <button className="relative p-2 text-gray-600 hover:bg-gray-100 rounded-lg">
-          <Bell size={20} />
-          <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
-        </button>
+        <NotificationCenter />
 
         <div className="flex items-center gap-3 pl-6 border-l border-gray-200">
           <div className="text-right">

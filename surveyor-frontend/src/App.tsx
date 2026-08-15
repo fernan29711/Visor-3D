@@ -10,6 +10,7 @@ import Quotes from './pages/Quotes'
 import Invoices from './pages/Invoices'
 import Reports from './pages/Reports'
 import Drones from './pages/Drones'
+import Notifications from './pages/Notifications'
 
 const queryClient = new QueryClient()
 
@@ -29,6 +30,7 @@ function App() {
               <Route path="invoices" element={<Invoices />} />
               <Route path="reports" element={<Reports />} />
               <Route path="drones" element={<Drones />} />
+              <Route path="notifications" element={<Notifications />} />
             </Route>
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
