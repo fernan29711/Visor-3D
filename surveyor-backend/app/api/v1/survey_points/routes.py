@@ -1,6 +1,7 @@
 """Survey points endpoints."""
 
-from fastapi import APIRouter, Depends, status, Query
+from fastapi import APIRouter, Depends, status, Query, UploadFile, File
+from fastapi.responses import StreamingResponse
 from sqlalchemy.orm import Session
 
 from app.db.database import get_db
@@ -16,6 +17,8 @@ from app.schemas.survey_points import (
 )
 from app.services.survey_service import SurveyService
 from app.core.exceptions import http_exception, AppException
+from app.api.v1.survey_points.csv_import import CSVImportParser
+from app.api.v1.survey_points.csv_export import CSVExporter
 
 router = APIRouter(prefix="/projects/{project_id}/survey-points", tags=["Survey Points"])
 
@@ -152,5 +155,143 @@ async def get_project_bounds(
         service = SurveyService(db)
         bounds = service.get_project_bounds(project_id)
         return bounds or {"message": "No points found"}
+    except AppException as e:
+        raise http_exception(e)
+
+@router.post("/csv/upload", response_model=ImportResponse)
+async def upload_csv_file(
+    project_id: str,
+    file: UploadFile = File(...),
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """Upload and import survey points from CSV file."""
+    try:
+        # Read file content
+        content = await file.read()
+        csv_content = content.decode('utf-8')
+
+        # Parse CSV
+        parser = CSVImportParser()
+        points = parser.parse_csv(csv_content)
+
+        # Validate points
+        validation = parser.validate_points(points)
+
+        if not validation['valid']:
+            return ImportResponse(
+                imported_count=0,
+                failed_count=validation['error_count'],
+                errors=validation['errors'],
+                message=f"CSV validation failed: {validation['error_count']} errors"
+            )
+
+        # Create SurveyPointCreate objects from valid points
+        from app.schemas.survey_points import SurveyPointCreate
+        point_creates = [
+            SurveyPointCreate(**point) for point in validation['valid_points']
+        ]
+
+        # Import points
+        service = SurveyService(db)
+        created, errors = service.bulk_create(
+            project_id,
+            str(current_user.organization_id),
+            str(current_user.id),
+            point_creates
+        )
+
+        return ImportResponse(
+            imported_count=len(created),
+            failed_count=len(errors),
+            errors=errors,
+            message=f"Imported {len(created)} points from CSV"
+        )
+    except Exception as e:
+        raise http_exception(AppException(str(e)))
+
+@router.get("/csv/export")
+async def export_csv(
+    project_id: str,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """Export survey points to CSV file."""
+    try:
+        service = SurveyService(db)
+        points = service.list_by_project(
+            project_id,
+            str(current_user.organization_id),
+            limit=10000
+        )
+
+        # Convert to dictionaries
+        point_dicts = [
+            {
+                'point_number': p.point_number,
+                'east': p.east,
+                'north': p.north,
+                'elevation': p.elevation,
+                'pdop': p.pdop,
+                'hdop': p.hdop,
+                'vdop': p.vdop,
+                'satellite_count': p.satellite_count,
+                'description': p.description,
+            }
+            for p in points
+        ]
+
+        # Export to CSV
+        exporter = CSVExporter()
+        csv_content = exporter.export_survey_points(point_dicts)
+
+        return StreamingResponse(
+            iter([csv_content]),
+            media_type="text/csv",
+            headers={"Content-Disposition": f"attachment; filename=survey_points_{project_id}.csv"}
+        )
+    except AppException as e:
+        raise http_exception(e)
+
+@router.get("/geojson/export")
+async def export_geojson(
+    project_id: str,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """Export survey points to GeoJSON file."""
+    try:
+        service = SurveyService(db)
+        points = service.list_by_project(
+            project_id,
+            str(current_user.organization_id),
+            limit=10000
+        )
+
+        # Convert to dictionaries
+        point_dicts = [
+            {
+                'point_number': p.point_number,
+                'east': p.east,
+                'north': p.north,
+                'elevation': p.elevation,
+                'pdop': p.pdop,
+                'hdop': p.hdop,
+                'vdop': p.vdop,
+                'satellite_count': p.satellite_count,
+                'description': p.description,
+            }
+            for p in points
+        ]
+
+        # Export to GeoJSON
+        exporter = CSVExporter()
+        geojson_content = exporter.export_geojson(point_dicts)
+
+        return StreamingResponse(
+            iter([geojson_content]),
+            media_type="application/geo+json",
+            headers={"Content-Disposition": f"attachment; filename=survey_points_{project_id}.geojson"}
+        )
     except AppException as e:
         raise http_exception(e)

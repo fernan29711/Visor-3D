@@ -154,6 +154,28 @@ class ApiClient {
     return this.client.post(`/projects/${projectId}/survey-points/bulk/import`, data)
   }
 
+  uploadSurveyPointsCSV(projectId: string, file: File) {
+    const formData = new FormData()
+    formData.append('file', file)
+    return this.client.post(
+      `/projects/${projectId}/survey-points/csv/upload`,
+      formData,
+      { headers: { 'Content-Type': 'multipart/form-data' } }
+    )
+  }
+
+  exportSurveyPointsCSV(projectId: string) {
+    return this.client.get(`/projects/${projectId}/survey-points/csv/export`, {
+      responseType: 'blob',
+    })
+  }
+
+  exportSurveyPointsGeoJSON(projectId: string) {
+    return this.client.get(`/projects/${projectId}/survey-points/geojson/export`, {
+      responseType: 'blob',
+    })
+  }
+
   // Calculations endpoints
   calculateDistance(data: any) {
     return this.client.post('/calculations/distance', data)

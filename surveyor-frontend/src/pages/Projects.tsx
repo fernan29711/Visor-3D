@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import { apiClient } from '../services/api'
 import { Helmet } from 'react-helmet-async'
@@ -16,6 +17,7 @@ interface Project {
 }
 
 export default function Projects() {
+  const navigate = useNavigate()
   const [searchTerm, setSearchTerm] = useState('')
   const [statusFilter, setStatusFilter] = useState('')
 
@@ -105,7 +107,7 @@ export default function Projects() {
               </thead>
               <tbody className="divide-y">
                 {projects.map((project) => (
-                  <tr key={project.id} className="hover:bg-gray-50">
+                  <tr key={project.id} className="hover:bg-gray-50 cursor-pointer" onClick={() => navigate(`/projects/${project.id}`)}>
                     <td className="px-6 py-4 text-sm font-medium text-gray-900">{project.code}</td>
                     <td className="px-6 py-4 text-sm text-gray-700">{project.name}</td>
                     <td className="px-6 py-4 text-sm">
@@ -119,7 +121,7 @@ export default function Projects() {
                     <td className="px-6 py-4 text-sm text-gray-700">
                       RD$ {project.spent?.toLocaleString() || '0'}
                     </td>
-                    <td className="px-6 py-4 text-sm flex gap-2">
+                    <td className="px-6 py-4 text-sm flex gap-2" onClick={(e) => e.stopPropagation()}>
                       <button className="text-blue-600 hover:text-blue-800">
                         <Edit2 size={16} />
                       </button>
