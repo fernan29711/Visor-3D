@@ -5,6 +5,7 @@ import Layout from './components/common/Layout'
 import Dashboard from './pages/Dashboard'
 import Projects from './pages/Projects'
 import ProjectDetail from './pages/ProjectDetail'
+import Quotes from './pages/Quotes'
 
 const queryClient = new QueryClient()
 
@@ -19,6 +20,7 @@ function App() {
               <Route path="dashboard" element={<Dashboard />} />
               <Route path="projects" element={<Projects />} />
               <Route path="projects/:projectId" element={<ProjectDetail />} />
+              <Route path="quotes" element={<Quotes />} />
             </Route>
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>

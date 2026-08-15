@@ -60,6 +60,11 @@ class ClientNotFoundError(NotFoundError):
     def __init__(self):
         super().__init__("Client")
 
+class QuoteNotFoundError(NotFoundError):
+    """Quote not found."""
+    def __init__(self):
+        super().__init__("Quote")
+
 class EmailAlreadyExistsError(ConflictError):
     """Email already registered."""
     def __init__(self):

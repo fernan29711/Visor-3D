@@ -192,6 +192,39 @@ class ApiClient {
   calculateSlope(data: any) {
     return this.client.post('/calculations/slope', data)
   }
+
+  // Quote endpoints
+  getQuotes(params?: any) {
+    return this.client.get('/quotes', { params })
+  }
+
+  getQuote(id: string) {
+    return this.client.get(`/quotes/${id}`)
+  }
+
+  createQuote(data: any) {
+    return this.client.post('/quotes', data)
+  }
+
+  updateQuote(id: string, data: any) {
+    return this.client.patch(`/quotes/${id}`, data)
+  }
+
+  deleteQuote(id: string) {
+    return this.client.delete(`/quotes/${id}`)
+  }
+
+  changeQuoteStatus(id: string, status: string) {
+    return this.client.post(`/quotes/${id}/status/${status}`)
+  }
+
+  getQuotesForClient(clientId: string) {
+    return this.client.get(`/quotes/client/${clientId}`)
+  }
+
+  getQuotesSummary() {
+    return this.client.get('/quotes/summary')
+  }
 }
 
 export const apiClient = new ApiClient()

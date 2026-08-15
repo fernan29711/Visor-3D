@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { Menu, Home, Map, FileText, Settings } from 'lucide-react'
+import { Menu, Home, Map, FileText, Settings, DollarSign } from 'lucide-react'
 
 export default function Sidebar() {
   return (
@@ -17,6 +17,10 @@ export default function Sidebar() {
         <Link to="/projects" className="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-gray-100 text-gray-700">
           <Menu size={20} />
           Proyectos
+        </Link>
+        <Link to="/quotes" className="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-gray-100 text-gray-700">
+          <DollarSign size={20} />
+          Cotizaciones
         </Link>
         <Link to="/map" className="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-gray-100 text-gray-700">
           <Map size={20} />
