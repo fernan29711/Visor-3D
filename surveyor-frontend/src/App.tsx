@@ -12,6 +12,7 @@ import Invoices from './pages/Invoices'
 import Reports from './pages/Reports'
 import Drones from './pages/Drones'
 import Notifications from './pages/Notifications'
+import Webhooks from './pages/Webhooks'
 import ClientDashboard from './pages/client/ClientDashboard'
 import ClientQuotes from './pages/client/ClientQuotes'
 import ClientInvoices from './pages/client/ClientInvoices'
@@ -40,6 +41,7 @@ function App() {
               <Route path="reports" element={<Reports />} />
               <Route path="drones" element={<Drones />} />
               <Route path="notifications" element={<Notifications />} />
+              <Route path="webhooks" element={<Webhooks />} />
             </Route>
 
             {/* Client Portal */}
