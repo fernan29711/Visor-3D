@@ -149,6 +149,8 @@ class ProjectService:
 
     def get_project_summary(self, org_id: str) -> dict:
         """Get summary of projects by status."""
+        from app.db.models import Client, SurveyPoint
+
         statuses = ["pending", "planned", "in_field", "processing", "in_review", "completed", "delivered", "archived"]
         summary = {}
 
@@ -158,5 +160,31 @@ class ProjectService:
                 Project.status == status
             ).count()
             summary[status] = count
+
+        # Add overall statistics
+        total_projects = self.db.query(Project).filter(
+            Project.organization_id == org_id
+        ).count()
+
+        total_clients = self.db.query(Client).filter(
+            Client.organization_id == org_id
+        ).count()
+
+        total_survey_points = self.db.query(SurveyPoint).join(
+            Project, SurveyPoint.project_id == Project.id
+        ).filter(
+            Project.organization_id == org_id
+        ).count()
+
+        avg_budget = self.db.query(Project).filter(
+            Project.organization_id == org_id
+        ).with_entities(Project.budget).all()
+
+        average_budget = sum([p[0] for p in avg_budget if p[0]]) / len(avg_budget) if avg_budget else 0
+
+        summary['total_projects'] = total_projects
+        summary['total_clients'] = total_clients
+        summary['total_survey_points'] = total_survey_points
+        summary['average_budget'] = round(average_budget, 2)
 
         return summary

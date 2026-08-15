@@ -100,6 +100,14 @@ class ApiClient {
     return this.client.delete(`/projects/${id}`)
   }
 
+  getProjectsSummary() {
+    return this.client.get('/projects/summary')
+  }
+
+  changeProjectStatus(id: string, status: string) {
+    return this.client.post(`/projects/${id}/status/${status}`)
+  }
+
   // Client endpoints
   getClients(params?: any) {
     return this.client.get('/clients', { params })
@@ -124,6 +132,10 @@ class ApiClient {
   // Survey points endpoints
   getSurveyPoints(projectId: string, params?: any) {
     return this.client.get(`/projects/${projectId}/survey-points`, { params })
+  }
+
+  getSurveyPointBounds(projectId: string) {
+    return this.client.get(`/projects/${projectId}/survey-points/bounds`)
   }
 
   createSurveyPoint(projectId: string, data: any) {
