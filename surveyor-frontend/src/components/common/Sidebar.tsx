@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { Menu, Home, Map, FileText, Settings, DollarSign, Receipt, BarChart3 } from 'lucide-react'
+import { Menu, Home, Map, FileText, Settings, DollarSign, Receipt, BarChart3, Drone } from 'lucide-react'
 
 export default function Sidebar() {
   return (
@@ -37,6 +37,10 @@ export default function Sidebar() {
         <Link to="/reports" className="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-gray-100 text-gray-700">
           <FileText size={20} />
           Reportes
+        </Link>
+        <Link to="/drones" className="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-gray-100 text-gray-700">
+          <Drone size={20} />
+          Drones & 3D
         </Link>
         <Link to="/settings" className="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-gray-100 text-gray-700">
           <Settings size={20} />
